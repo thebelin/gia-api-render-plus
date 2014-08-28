@@ -1,0 +1,11 @@
+/* apply a natural box layout model to all elements */
+*, *:before, *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+html,body{ height:100%;}
+body {font-family:Verdana,Lucida;}
+header,footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
+navigation {display:none;}
+content {height:30em;width:100%;}
+footer {height:2em;position:absolute;bottom:.5em;}
+
+.category {width:100%;}
+.menuItem {width:100%;margin-bottom:.2em;}

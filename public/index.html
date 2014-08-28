@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
+    <title>imaginary Eats</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Yummy Imaginary Food">
+    <meta name="application-url" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=0, maximum-scale=1">
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="stylesheet" type="text/css" href="./style/style.css">
+    <script src="./script/jquery.min.js"></script>
+    <script src="./script/jquery.jsrender.js"></script>
+    <script src="./script/apiClient.js"></script>
+    <script src="./script/autosize.js"></script>
+</head>
+
+<body>
+    <div id="header"></div>
+    <div id="navigation"></div>
+    <!-- The default DOM target for API render calls -->
+    <div id="content"></div>
+    <!-- Finish DOM target for API render calls -->
+    <div id="footer"></div>
+</body>
+
+<!-- Display Templates -->
+<script id="primary" type="text/xjsrender">
+    {{for config     tmpl='#contact'  /}}
+    {{for categories tmpl='#category' /}}
+</script>
+
+<script id="contact"  type="text/xjsrender">
+    <h1>{{:name}}</h1>
+    <h3>{{:phone}}</h3>
+    <h4>{{:hours}}</h4>
+    <p>{{:description}}</p>
+</script>
+
+<script id="category" type="text/xjsrender">
+    <h2>{{>name}}</h2>
+    <h3>{{>description}}</h3>
+    {{for items tmpl='#menuItem' /}}
+
+</script>
+
+<script id="menuItem" type="text/xjsrender">
+    <div class="menuItem {{:name}}">
+        <div class="itemName {{if (spicy)}}spicy{{/if}}">{{>name}}:</div>
+        <div class="menuPrice">${{>price}}</div>
+        <div class="menuDescription">{{>description}}</div>
+    </div>
+</script>
+<!-- END TEMPLATES -->
+</body></html>
