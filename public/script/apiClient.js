@@ -12,9 +12,11 @@ var apiClient = function(options) {
   if (!this instanceof apiClient) {
     return new apiClient(options);
   }
+  // @type Object self reference for external callback
+  var self = this,
 
   // @type String/Boolean Set to false to disable debug, change to a string to identify
-  var debug      = options.debug        || "#apiClient.js -- ",
+    debug        = options.debug        || "#apiClient.js -- ",
 
   // @type string live mode or dev mode
     mode         = options.mode         || 'dev',
@@ -49,7 +51,7 @@ var apiClient = function(options) {
 
   // @type Function Get the current url based on the configuration of the object
     getUrl = function () {
-      return mode === 'dev' ? apiUrl : devUrl;
+      return mode === 'dev' ? devUrl : apiUrl;
     },
 
   // @type Function Init the buttons on the page with anything the init configuration wants
@@ -77,9 +79,7 @@ var apiClient = function(options) {
 
   // @type Function Get the current api data set and render it on the page
   //                This is an async call since nothing is specified for the method
-    getData = function (params) {
-      // @type Object self reference for external callback
-      var self = this;
+    poll = function (params) {
       $.ajax({
         // Get the API URL
         url: getUrl(),
@@ -87,7 +87,7 @@ var apiClient = function(options) {
         // Add the memo as it stands to the api access parameters
         // Also, default to an "a"ction querystring value of poll
         // Add any querystring params specified in the getData event
-        data: $.extend({memo: memo, a: 'poll'}, params),
+        data: $.extend({memo: memo, action: 'poll'}, params),
 
         // jsonp parameters
         dataType: 'jsonp',
@@ -95,21 +95,25 @@ var apiClient = function(options) {
       }).done(function (data) {
         // Set the local memo if it has been supplied
         if (data[memoField]) {
+          debug && console.log(debug + 'memo update', data[memoField]);
           memo = data[memoField];
+
+          // Store the data locally
+          localStorage.setItem(localDataDom + '_data', JSON.stringify(data));
+
+          // Render the data to the page's jsRender template render system
+          render(data);
+        } else {
+          // There was no update and nothing needs to be done.
         }
 
-        // Store the data locally
-        localStorage.setItem(localDataDom + '_data', JSON.stringify(data));
-
-        // Render the data to the page's jsRender template render system
-        render(data);
       });
 
       // If there's a polling interval, poll for updates at that interval
       if (pollInterval) {
         window.setTimeout(
           function () {
-            self.getData.call(self, params);
+            poll.call(self, params);
           },
           pollInterval
         );
@@ -131,7 +135,7 @@ var apiClient = function(options) {
       render(safeParse(localStorage.getItem(localDataDom + '_data')));
 
       // And get the new data
-      getData(params);
+      poll(params);
     };
 
   // Get the local event Name 
@@ -149,7 +153,9 @@ var apiClient = function(options) {
 $(document).ready(function () {
   // Start the apiClient with all the options set that need to be configured
   var pageClient = new apiClient({
-    pollInterval: 1000,
+    pollInterval: 10000,
+    memoField: 'menuHash',
+    mode: 'dev',
     apiUrl: 'https://script.google.com/macros/s/AKfycbyvb-2gd5IDPf42P2CIS1f8EVesZfPTMZJNCsLyAvDnEnbYdJhb/exec',
     devUrl: 'https://script.google.com/macros/s/AKfycbwqjwmqASwN0-g0p7dLx_fsqHVc2mpO-e3M00BY8oBB/dev'
   });

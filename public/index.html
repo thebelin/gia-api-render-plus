@@ -38,14 +38,15 @@
 </script>
 
 <script id="category" type="text/xjsrender">
-    <h2>{{>name}}</h2>
-    <h3>{{>description}}</h3>
-    {{for items tmpl='#menuItem' /}}
-
+    <div class="category">
+        <h2>{{>name}}</h2>
+        <h3>{{>description}}</h3>
+        {{for items tmpl='#menuItem' /}}
+    </div>
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem {{:name}}">
+    <div class="menuItem {{:class}}" data-menu-name={{:name}}>
         <div class="itemName {{if (spicy)}}spicy{{/if}}">{{>name}}:</div>
         <div class="menuPrice">${{>price}}</div>
         <div class="menuDescription">{{>description}}</div>
