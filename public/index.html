@@ -11,8 +11,9 @@
     <link rel="stylesheet" type="text/css" href="./style/style.css">
     <script src="./script/jquery.min.js"></script>
     <script src="./script/jquery.jsrender.js"></script>
+    <script src="./script/simpleCart.min.js"></script>
     <script src="./script/apiClient.js"></script>
-    <script src="./script/autosize.js"></script>
+    <script src="./script/pageReady.js"></script>
 </head>
 
 <body>
@@ -34,7 +35,7 @@
     <h1>{{:name}}</h1>
     <h3>{{:phone}}</h3>
     <h4>{{:hours}}</h4>
-    <p>{{:description}}</p>
+    <p>{{>description}}</p>
 </script>
 
 <script id="category" type="text/xjsrender">

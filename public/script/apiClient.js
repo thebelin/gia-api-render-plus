@@ -149,14 +149,3 @@ var apiClient = function(options) {
     init(options.initParams || {});
   }
 }
-
-$(document).ready(function () {
-  // Start the apiClient with all the options set that need to be configured
-  var pageClient = new apiClient({
-    pollInterval: 10000,
-    memoField: 'menuHash',
-    mode: 'dev',
-    apiUrl: 'https://script.google.com/macros/s/AKfycbyvb-2gd5IDPf42P2CIS1f8EVesZfPTMZJNCsLyAvDnEnbYdJhb/exec',
-    devUrl: 'https://script.google.com/macros/s/AKfycbwqjwmqASwN0-g0p7dLx_fsqHVc2mpO-e3M00BY8oBB/dev'
-  });
-})
