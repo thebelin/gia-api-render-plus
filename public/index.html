@@ -30,8 +30,15 @@
 
 <!-- Display Templates -->
 <script id="primary" type="text/xjsrender">
-    <div class="contactInfo">{{for config     tmpl='#contact'  /}}</div>
-    <div class="cartItems">  {{for categories tmpl='#category' /}}</div>
+    <div class="contactInfo">
+        {{for config     tmpl='#contact'  /}}
+    </div>
+    <div class="cartItems">
+        {{for categories tmpl='#category' /}}
+    </div>
+    <div class="details">
+        {{for details tmpl='#details' /}}
+    </div>
 </script>
 
 <script id="contact" type="text/xjsrender">
