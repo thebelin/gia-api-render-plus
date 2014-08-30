@@ -17,29 +17,32 @@
 </head>
 
 <body>
-    <div id="header"></div>
-    <div id="navigation"></div>
-    <!-- The default DOM target for API render calls -->
+    <div id="cart">
+        <div class="simpleCart_items"></div>
+        <div class="simpleCart_grandTotal"></div>
+        <a href="javascript:;" class="simpleCart_empty"></a>
+        <a href="javascript:;" class="simpleCart_checkout"></a>
+    </div>
+    <!-- The DOM target for API render calls -->
     <div id="content"></div>
     <!-- Finish DOM target for API render calls -->
-    <div id="footer"></div>
 </body>
 
 <!-- Display Templates -->
 <script id="primary" type="text/xjsrender">
-    {{for config     tmpl='#contact'  /}}
-    {{for categories tmpl='#category' /}}
+    <div class="contactInfo">{{for config     tmpl='#contact'  /}}</div>
+    <div class="cartItems">  {{for categories tmpl='#category' /}}</div>
 </script>
 
-<script id="contact"  type="text/xjsrender">
-    <h1>{{:name}}</h1>
-    <h3>{{:phone}}</h3>
-    <h4>{{:hours}}</h4>
-    <p>{{>description}}</p>
+<script id="contact" type="text/xjsrender">
+    <div class="contactName">{{:name}}</div>
+    <div class="contactPhone">{{:phone}}</div>
+    <div class="contactHours">{{:hours}}</div>
+    <div class="contactDescription">{{>description}}</div>
 </script>
 
 <script id="category" type="text/xjsrender">
-    <div class="category">
+    <div class="category" data-name="{{:name}}">
         <h2>{{>name}}</h2>
         <h3>{{>description}}</h3>
         {{for items tmpl='#menuItem' /}}
@@ -47,10 +50,16 @@
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem {{:class}}" data-menu-name={{:name}}>
-        <div class="itemName {{if (spicy)}}spicy{{/if}}">{{>name}}:</div>
-        <div class="menuPrice">${{>price}}</div>
+    <div class="menuItem simpleCart_shelfItem {{:class}}">
+        <div class="itemName {{if (spicy)}}spicy{{/if}} item_name">{{>name}}:</div>
+        <div class="menuPrice item_price">${{>price}}</div>
+        <input class="item_quantity" type="number" value="1"></input>
         <div class="menuDescription">{{>description}}</div>
+        <div class="addButton"
+            data-name = "{{:name}}"
+            data-price = "{{:price}}"
+            data-description = "{{>description}}"
+        >+ Add</div>
     </div>
 </script>
 <!-- END TEMPLATES -->

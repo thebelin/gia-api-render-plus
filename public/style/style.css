@@ -1,11 +1,148 @@
 /* apply a natural box layout model to all elements */
 *, *:before, *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
-html,body{ height:100%;}
+html{ height:100%;}
 body {font-family:Verdana,Lucida;}
-header,footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
-navigation {display:none;}
-content {height:30em;width:100%;}
-footer {height:2em;position:absolute;bottom:.5em;}
+#header,#footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
+#navigation {display:none;}
+#content {height:30em;width:100%;}
+#footer {height:2em;position:absolute;bottom:.1em;}
 
 .category {width:100%;}
-.menuItem {width:100%;margin-bottom:.2em;}
+
+.cartItems {
+    float:left;
+    width: 100%;
+    height: 42em;
+    overflow-y: scroll;
+}
+
+#cart {
+    position: absolute;
+    top: 1em;
+    right:3em;
+    width: 33%;
+    min-height: 10em;
+    max-height: 50%;
+    background-color: #fff;
+    border: .1em solid #c0c0c0;
+    padding: .2em;
+    box-shadow: 1px 1px #000;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+}
+
+#cart .simpleCart_grandTotal {
+    float: right;
+    margin-right: 2em;
+}
+.simpleCart_items .headerRow, .simpleCart_items .itemRow .simpleCart_remove {
+    display: none;
+}
+.simpleCart_items .itemRow {
+    float:left;
+    width:100%;
+    margin-top:.1em;
+}
+.simpleCart_items .itemRow .item-name {
+    float: left;
+    font-size: 1.1em;
+}
+.simpleCart_items .itemRow .item-quantity {
+    float: left;
+    width: 1em;
+}
+
+.simpleCart_items .itemRow .item-price {
+    float: left;
+    width: 7em;
+}
+.simpleCart_items .itemRow .item-total {
+    width: 5em;
+    text-align: center;
+    float: right;
+    font-weight: bold;
+    font-size: .9em;
+}
+.addButton, .simpleCart_items .itemRow .item-decrement a, .simpleCart_items .itemRow .item-increment a {
+    float: right;
+    border: .1em solid #c0c0c0;
+    width: 1.5em;
+    height: 1.5em;
+    text-align:center;
+    box-shadow: 1px 1px #000;
+    text-shadow: 1px 1px #000;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    font-weight:bold;
+    cursor: pointer;
+}
+.simpleCart_items .itemRow .item-decrement a {
+    color: #f00;
+}
+.simpleCart_items .itemRow .item-increment a {
+    color: #0f0;
+}
+.addButton, .simpleCart_items .itemRow .item-decrement a:active, .simpleCart_items .itemRow .item-increment a:active {
+    background-color: #000;
+}
+.simpleCart_increment, .simpleCart_decrement {
+    text-decoration: none;
+}
+
+.menuItem {
+    width: 45%;
+    margin-right: 2.5;
+}
+.menuItem .itemName {
+    float: left;
+    font-weight: bold;
+    margin-right: 1em;
+}
+.menuItem .itemDescription {
+    float: left;
+}
+.addButton {
+    float:left;
+    width: 5em;
+    height: 1.7em;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    color: #0f0;
+    background-color:#163011;
+    padding-top: .2em;
+}
+
+.addButton:active {
+    background-color:#fff;
+}
+
+
+
+
+.contactInfo {
+    position: absolute;
+    left: 2.5%;
+    width: 95%;
+    height: 4em;
+    bottom: 0px;
+    background-color: #fff;
+}
+.contactInfo .contactName {
+    font-size: 1.2em;
+    font-weight: bold;
+    width:50%;
+    float:left;
+}
+.contactInfo .contactPhone {
+    float:left
+}
+.contactInfo .contactHours {
+    float: right;
+    text-align: center;
+}
+.contactInfo .contactDescription {
+    display: none;
+}
