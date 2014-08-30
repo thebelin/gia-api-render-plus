@@ -1,19 +1,38 @@
 /* apply a natural box layout model to all elements */
 *, *:before, *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
 html{ height:100%;}
-body {font-family:Verdana,Lucida;}
+body {font-family:Verdana,Lucida;background-image:url('../images/food_background.jpg');background-size:auto 100%;}
 #header,#footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
 #navigation {display:none;}
-#content {height:30em;width:100%;}
+#content {height:30em;width:100%;margin-left:.5em;margin-top:.5em;}
 #footer {height:2em;position:absolute;bottom:.1em;}
 
-.category {width:100%;}
+.category {
+    margin-top:1em;
+    margin-bottom:.5em;
+    width: 100%;
+    float: left;
+}
+.category .categoryName {
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;
+    text-transform: capitalize;
+    font-variant: small-caps;
+    width: 70%;
+}
 
+.category .categoryDescription {
+    text-align: center;
+    width: 70%;
+}
 .cartItems {
     float:left;
     width: 100%;
-    height: 42em;
+    height: 45em;
     overflow-y: scroll;
+    text-shadow: 1px 1px #000;
+    color: #fff;
 }
 
 #cart {
@@ -21,7 +40,7 @@ body {font-family:Verdana,Lucida;}
     top: 1em;
     right:3em;
     width: 33%;
-    min-height: 10em;
+    min-height: 4em;
     max-height: 50%;
     background-color: #fff;
     border: .1em solid #c0c0c0;
@@ -30,6 +49,7 @@ body {font-family:Verdana,Lucida;}
     -webkit-border-radius: .5em;
     -moz-border-radius: .5em;
     border-radius: .5em;
+    opacity:.9;
 }
 
 #cart .simpleCart_grandTotal {
@@ -93,15 +113,20 @@ body {font-family:Verdana,Lucida;}
 
 .menuItem {
     width: 45%;
-    margin-right: 2.5;
+    float: left;
+    margin-right: 2em;
+    margin-bottom: 1em;
 }
 .menuItem .itemName {
     float: left;
     font-weight: bold;
     margin-right: 1em;
 }
-.menuItem .itemDescription {
+.menuItem .menuDescription {
     float: left;
+}
+.menuItem .menuPrice {
+    float: right;
 }
 .addButton {
     float:left;
@@ -117,6 +142,8 @@ body {font-family:Verdana,Lucida;}
 
 .addButton:active {
     background-color:#fff;
+    box-shadow: -1px -1px #000;
+
 }
 
 
@@ -129,11 +156,25 @@ body {font-family:Verdana,Lucida;}
     height: 4em;
     bottom: 0px;
     background-color: #fff;
+    -webkit-border-top-left-radius: 1em;
+    -webkit-border-top-right-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    -moz-border-radius-topright: 1em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: .1em #000 solid;
+    border-bottom: 0;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    opacity:.9;
 }
 .contactInfo .contactName {
     font-size: 1.2em;
     font-weight: bold;
-    width:50%;
+    width:40%;
     float:left;
 }
 .contactInfo .contactPhone {

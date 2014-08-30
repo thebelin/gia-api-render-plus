@@ -36,30 +36,29 @@
 
 <script id="contact" type="text/xjsrender">
     <div class="contactName">{{:name}}</div>
-    <div class="contactPhone">{{:phone}}</div>
+    <div class="contactPhone">{{:phone}}<br />{{:address}}</div>
     <div class="contactHours">{{:hours}}</div>
     <div class="contactDescription">{{>description}}</div>
 </script>
 
 <script id="category" type="text/xjsrender">
     <div class="category" data-name="{{:name}}">
-        <h2>{{>name}}</h2>
-        <h3>{{>description}}</h3>
+        <div class="categoryName">{{>name}}</div>
+        <div class="categoryDescription">{{>description}}</div>
         {{for items tmpl='#menuItem' /}}
     </div>
 </script>
 
 <script id="menuItem" type="text/xjsrender">
     <div class="menuItem simpleCart_shelfItem {{:class}}">
-        <div class="itemName {{if (spicy)}}spicy{{/if}} item_name">{{>name}}:</div>
-        <div class="menuPrice item_price">${{>price}}</div>
-        <input class="item_quantity" type="number" value="1"></input>
-        <div class="menuDescription">{{>description}}</div>
-        <div class="addButton"
+        <div class="itemName {{if (spicy)}}spicy{{/if}} item_name">{{>name}}</div>
+        <div class="menuPrice"><div class="addButton"
             data-name = "{{:name}}"
             data-price = "{{:price}}"
             data-description = "{{>description}}"
-        >+ Add</div>
+        >${{>price}}</div></div>
+        <div class="menuDescription">{{>description}}</div>
+        
     </div>
 </script>
 <!-- END TEMPLATES -->
