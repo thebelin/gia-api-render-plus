@@ -11,45 +11,54 @@
     <link rel="stylesheet" type="text/css" href="./style/style.css">
     <script src="./script/jquery.min.js"></script>
     <script src="./script/jquery.jsrender.js"></script>
+    <script src="./script/simpleCart.min.js"></script>
     <script src="./script/apiClient.js"></script>
-    <script src="./script/autosize.js"></script>
+    <script src="./script/pageReady.js"></script>
 </head>
 
 <body>
-    <div id="header"></div>
-    <div id="navigation"></div>
-    <!-- The default DOM target for API render calls -->
+    <div id="cart">
+        <div class="simpleCart_items"></div>
+        <div class="simpleCart_grandTotal"></div>
+        <a href="javascript:;" class="simpleCart_empty"></a>
+        <a href="javascript:;" class="simpleCart_checkout"></a>
+    </div>
+    <!-- The DOM target for API render calls -->
     <div id="content"></div>
     <!-- Finish DOM target for API render calls -->
-    <div id="footer"></div>
 </body>
 
 <!-- Display Templates -->
 <script id="primary" type="text/xjsrender">
-    {{for config     tmpl='#contact'  /}}
-    {{for categories tmpl='#category' /}}
+    <div class="contactInfo">{{for config     tmpl='#contact'  /}}</div>
+    <div class="cartItems">  {{for categories tmpl='#category' /}}</div>
 </script>
 
-<script id="contact"  type="text/xjsrender">
-    <h1>{{:name}}</h1>
-    <h3>{{:phone}}</h3>
-    <h4>{{:hours}}</h4>
-    <p>{{:description}}</p>
+<script id="contact" type="text/xjsrender">
+    <div class="contactName">{{:name}}</div>
+    <div class="contactPhone">{{:phone}}<br />{{:address}}</div>
+    <div class="contactHours">{{:hours}}</div>
+    <div class="contactDescription">{{>description}}</div>
 </script>
 
 <script id="category" type="text/xjsrender">
-    <div class="category">
-        <h2>{{>name}}</h2>
-        <h3>{{>description}}</h3>
+    <div class="category" data-name="{{:name}}">
+        <div class="categoryName">{{>name}}</div>
+        <div class="categoryDescription">{{>description}}</div>
         {{for items tmpl='#menuItem' /}}
     </div>
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem {{:class}}" data-menu-name={{:name}}>
-        <div class="itemName {{if (spicy)}}spicy{{/if}}">{{>name}}:</div>
-        <div class="menuPrice">${{>price}}</div>
+    <div class="menuItem simpleCart_shelfItem {{:class}}">
+        <div class="itemName {{if (spicy)}}spicy{{/if}} item_name">{{>name}}</div>
+        <div class="menuPrice"><div class="addButton"
+            data-name = "{{:name}}"
+            data-price = "{{:price}}"
+            data-description = "{{>description}}"
+        >${{>price}}</div></div>
         <div class="menuDescription">{{>description}}</div>
+        
     </div>
 </script>
 <!-- END TEMPLATES -->

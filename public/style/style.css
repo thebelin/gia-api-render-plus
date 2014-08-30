@@ -1,11 +1,189 @@
 /* apply a natural box layout model to all elements */
 *, *:before, *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
-html,body{ height:100%;}
-body {font-family:Verdana,Lucida;}
-header,footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
-navigation {display:none;}
-content {height:30em;width:100%;}
-footer {height:2em;position:absolute;bottom:.5em;}
+html{ height:100%;}
+body {font-family:Verdana,Lucida;background-image:url('../images/food_background.jpg');background-size:auto 100%;}
+#header,#footer {height:4em;width:100%;box-shadow:.1em .1em .1em #c0c0c0;margin-bottom:.5em}
+#navigation {display:none;}
+#content {height:30em;width:100%;margin-left:.5em;margin-top:.5em;}
+#footer {height:2em;position:absolute;bottom:.1em;}
 
-.category {width:100%;}
-.menuItem {width:100%;margin-bottom:.2em;}
+.category {
+    margin-top:1em;
+    margin-bottom:.5em;
+    width: 100%;
+    float: left;
+}
+.category .categoryName {
+    font-weight: bold;
+    font-size: 1.1em;
+    text-align: center;
+    text-transform: capitalize;
+    font-variant: small-caps;
+    width: 70%;
+}
+
+.category .categoryDescription {
+    text-align: center;
+    width: 70%;
+}
+.cartItems {
+    float:left;
+    width: 100%;
+    height: 45em;
+    overflow-y: scroll;
+    text-shadow: 1px 1px #000;
+    color: #fff;
+}
+
+#cart {
+    position: absolute;
+    top: 1em;
+    right:3em;
+    width: 33%;
+    min-height: 4em;
+    max-height: 50%;
+    background-color: #fff;
+    border: .1em solid #c0c0c0;
+    padding: .2em;
+    box-shadow: 1px 1px #000;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    opacity:.9;
+}
+
+#cart .simpleCart_grandTotal {
+    float: right;
+    margin-right: 2em;
+}
+.simpleCart_items .headerRow, .simpleCart_items .itemRow .simpleCart_remove {
+    display: none;
+}
+.simpleCart_items .itemRow {
+    float:left;
+    width:100%;
+    margin-top:.1em;
+}
+.simpleCart_items .itemRow .item-name {
+    float: left;
+    font-size: 1.1em;
+}
+.simpleCart_items .itemRow .item-quantity {
+    float: left;
+    width: 1em;
+}
+
+.simpleCart_items .itemRow .item-price {
+    float: left;
+    width: 7em;
+}
+.simpleCart_items .itemRow .item-total {
+    width: 5em;
+    text-align: center;
+    float: right;
+    font-weight: bold;
+    font-size: .9em;
+}
+.addButton, .simpleCart_items .itemRow .item-decrement a, .simpleCart_items .itemRow .item-increment a {
+    float: right;
+    border: .1em solid #c0c0c0;
+    width: 1.5em;
+    height: 1.5em;
+    text-align:center;
+    box-shadow: 1px 1px #000;
+    text-shadow: 1px 1px #000;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    font-weight:bold;
+    cursor: pointer;
+}
+.simpleCart_items .itemRow .item-decrement a {
+    color: #f00;
+}
+.simpleCart_items .itemRow .item-increment a {
+    color: #0f0;
+}
+.addButton, .simpleCart_items .itemRow .item-decrement a:active, .simpleCart_items .itemRow .item-increment a:active {
+    background-color: #000;
+}
+.simpleCart_increment, .simpleCart_decrement {
+    text-decoration: none;
+}
+
+.menuItem {
+    width: 45%;
+    float: left;
+    margin-right: 2em;
+    margin-bottom: 1em;
+}
+.menuItem .itemName {
+    float: left;
+    font-weight: bold;
+    margin-right: 1em;
+}
+.menuItem .menuDescription {
+    float: left;
+}
+.menuItem .menuPrice {
+    float: right;
+}
+.addButton {
+    float:left;
+    width: 5em;
+    height: 1.7em;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    color: #0f0;
+    background-color:#163011;
+    padding-top: .2em;
+}
+
+.addButton:active {
+    background-color:#fff;
+    box-shadow: -1px -1px #000;
+
+}
+
+
+
+
+.contactInfo {
+    position: absolute;
+    left: 2.5%;
+    width: 95%;
+    height: 4em;
+    bottom: 0px;
+    background-color: #fff;
+    -webkit-border-top-left-radius: 1em;
+    -webkit-border-top-right-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    -moz-border-radius-topright: 1em;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    border: .1em #000 solid;
+    border-bottom: 0;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    opacity:.9;
+}
+.contactInfo .contactName {
+    font-size: 1.2em;
+    font-weight: bold;
+    width:40%;
+    float:left;
+}
+.contactInfo .contactPhone {
+    float:left
+}
+.contactInfo .contactHours {
+    float: right;
+    text-align: center;
+}
+.contactInfo .contactDescription {
+    display: none;
+}
