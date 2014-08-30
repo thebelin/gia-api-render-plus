@@ -4,6 +4,9 @@
 var cart;
 $(document).ready(function () {
   var
+    // This tracks if the user is on a mobile browser
+    isMobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())),
+
     // Start the shoppingCart with all the options set
     cart = simpleCart({
       debug: true,
@@ -76,7 +79,7 @@ $(document).ready(function () {
     // This is a function for making the app design responsive
     resizer = function() {
       var zoomTo = 800;
-        if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) {
+        if (isMobile) {
           zoomTo = 600;
         }
 

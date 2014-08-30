@@ -9,22 +9,24 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 
 .category {
     margin-top:1em;
-    margin-bottom:.5em;
-    width: 100%;
+    margin-bottom:.75em;
+    width: 60%;
     float: left;
 }
 .category .categoryName {
+    float:left;
+    width:100%;
     font-weight: bold;
     font-size: 1.1em;
     text-align: center;
     text-transform: capitalize;
     font-variant: small-caps;
-    width: 70%;
 }
 
 .category .categoryDescription {
+    float:left;
+    width:100%;
     text-align: center;
-    width: 70%;
 }
 .cartItems {
     float:left;
@@ -35,11 +37,9 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     color: #fff;
 }
 
-#cart {
+.details, #cart {
     position: absolute;
-    top: 1em;
-    right:3em;
-    width: 33%;
+    width: 35%;
     min-height: 4em;
     max-height: 50%;
     background-color: #fff;
@@ -49,7 +49,12 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     -webkit-border-radius: .5em;
     -moz-border-radius: .5em;
     border-radius: .5em;
-    opacity:.9;
+    opacity:.8;
+    right:1.5em;
+}
+
+#cart {
+    top:.5em;    
 }
 
 #cart .simpleCart_grandTotal {
@@ -67,18 +72,20 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 .simpleCart_items .itemRow .item-name {
     float: left;
     font-size: 1.1em;
+    width: 55%;
+    overflow-x: hidden;
 }
 .simpleCart_items .itemRow .item-quantity {
     float: left;
-    width: 1em;
+    width: 7%;
 }
 
 .simpleCart_items .itemRow .item-price {
     float: left;
-    width: 7em;
+    width: 25%;
 }
 .simpleCart_items .itemRow .item-total {
-    width: 5em;
+    width: 20%;
     text-align: center;
     float: right;
     font-weight: bold;
@@ -112,10 +119,22 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 .menuItem {
-    width: 45%;
+    background-color: #FFFADA;
+    color:#000;
+    text-shadow: 1px 1px #fff;
+    width: 100%;
     float: left;
+    padding: .25em;
     margin-right: 2em;
     margin-bottom: 1em;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 10px 0px rgba(50, 50, 50, 0.75);
+    opacity:.85;
+    clear:both;
 }
 .menuItem .itemName {
     float: left;
@@ -186,4 +205,9 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 .contactInfo .contactDescription {
     display: none;
+}
+
+.details {
+    bottom: 6em;
+    height: 20em;
 }
