@@ -1,5 +1,5 @@
 application: imaginary-food
-version: 2
+version: 5
 runtime: php
 api_version: 1
 
@@ -12,3 +12,5 @@ handlers:
   static_dir: script
 - url: /images
   static_dir: images
+- url: /hostedImages
+  static_dir: hostedImages

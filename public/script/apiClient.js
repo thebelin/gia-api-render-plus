@@ -121,7 +121,7 @@ var apiClient = function(options) {
           memo = data[memoField];
 
           // Store the data locally
-          localDataDom && localStorage.setItem(localDataDom + '_data', JSON.stringify(data));
+          localDataDom && localStorage && localStorage.setItem(localDataDom + '_data', JSON.stringify(data));
 
           // Render the data to the page's jsRender template render system
           render(data);
@@ -163,7 +163,7 @@ var apiClient = function(options) {
   // A default init function to run
     init = function (params) {
       // If there's data stored in the localstorage, render it to the page
-      localDataDom && render(safeParse(localStorage.getItem(localDataDom + '_data')));
+      localDataDom && localStorage && render(safeParse(localStorage.getItem(localDataDom + '_data')));
 
       // And get the new data
       poll(params);

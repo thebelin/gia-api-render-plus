@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    
-    <title>imaginary Eats</title>
+    <title>Imaginary Eats</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Yummy Imaginary Food">
     <meta name="application-url" content="">
@@ -9,6 +9,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="stylesheet" type="text/css" href="./style/style.css">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     <script src="./script/jquery.min.js"></script>
     <script src="./script/jquery.jsrender.js"></script>
     <script src="./script/simpleCart.min.js"></script>
@@ -17,38 +18,101 @@
 </head>
 
 <body>
-    <div id="cart">
-        <div class="simpleCart_items"></div>
-        <div class="simpleCart_grandTotal"></div>
-        <a href="javascript:;" class="simpleCart_empty"></a>
-        <a href="javascript:;" class="simpleCart_checkout"></a>
+    <div class='socialModules'>
+        <div class='facebook socialModule'>
+                <!-- Facebook Root -->
+            <div id="fb-root"></div>
+            <script>(function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=1565910020296909&version=v2.0";
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+                <!-- End Facebook Root -->
+
+                <!-- Facebook DOM anchor for LIKE -->
+            <div class="fb-like" data-href="http://imaginaryeats.com" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+                <!-- End Facebook DOM Anchor for LIKE -->
+        </div>
     </div>
-    <!-- The DOM target for API render calls -->
+     <!-- The DOM target for API render calls -->
     <div id="content"></div>
     <!-- Finish DOM target for API render calls -->
-</body>
+
 
 <!-- Display Templates -->
 <script id="primary" type="text/xjsrender">
-    <div class="contactInfo">
-        {{for config     tmpl='#contact'  /}}
+    <div id="contentOverlay"></div>
+    {{for config tmpl='#cartTemplate' /}}
+    <div class="breadcrumbs">
+        {{for categories tmpl='#breadcrumb' /}}
     </div>
-    <div class="cartItems">
+    <div id="previewOverlay"></div>
+    <div id="previewMask"></div>
+    <div id="preview"></div>
+    <div class="drawer">
+        {{for config     tmpl='#drawerTemplate'  /}}
+    </div>
+        <div class="cartItems">
         {{for categories tmpl='#category' /}}
     </div>
     <div class="details">
-        {{for details tmpl='#details' /}}
+        {{for config     tmpl='#details' /}}
     </div>
 </script>
 
-<script id="contact" type="text/xjsrender">
+<script id="socialFacebook" type="text/xjsrender">
+
+</script>
+
+<script id="breadcrumb" type="text/xjsrender">
+    <div class="breadcrumbCategory" data-name="{{:name}}">
+        <a href="#{{:name}}">
+        <div alt="{{>description}}" class="breadcrumbName">{{>name}}</div>
+        </a>
+    </div>
+</script>
+
+<script id="cartTemplate" type="text/xjsrender">
+    <div id="cart">
+       <div class="simpleCart_items"></div>
+        <span>Total: </span>
+        <div class="simpleCart_grandTotal"></div>
+    </div>
+</script>
+
+<script id="drawerTemplate" type="text/xjsrender">
+    {{include tmpl="#socialLinkTemplate" /}}
     <div class="contactName">{{:name}}</div>
-    <div class="contactPhone">{{:phone}}<br />{{:address}}</div>
+    <div class="contactInfo">
+        <div class="contactPhone">{{:phone}}</div>
+        <div class="contactAddress">
+            <div class="mapLink">
+                <i class="fa fa-map-marker"></i>
+            </div>
+            {{:address}}
+        </div>
+    </div>
     <div class="contactHours">{{:hours}}</div>
     <div class="contactDescription">{{>description}}</div>
+    <div class="drawerContents"></div>
+    <div class="exitDrawer">X</div>
+</script>
+
+<script id="socialLinkTemplate" type="text/xjsrender">
+    <div class="socialLinks">
+        <div class="socialButton" data-system="facebook" data-id="{{:facebook}}"><i class="fa fa-facebook"></i></div>
+        <div class="socialButton" data-system="twitter" data-id="{{:twitter}}"><i class="fa fa-twitter"></i></div>
+        <div class="socialButton" data-system="google" data-id="{{:google}}"><i class="fa fa-google-plus-square"></i></div>
+        <div class="socialButton" data-system="youtube" data-id="{{:youtube}}"><i class="fa fa-youtube"></i></div>
+        <div class="socialButton" data-system="pinterest" data-id="{{:pinterest}}"><i class="fa fa-pinterest"></i></div>
+        <div class="socialButton" data-system="rss" data-id="{{:rss}}"><i class="fa fa-rss"></i></div>
+    </div>
 </script>
 
 <script id="category" type="text/xjsrender">
+    <a id="{{:name}}" />
     <div class="category" data-name="{{:name}}">
         <div class="categoryName">{{>name}}</div>
         <div class="categoryDescription">{{>description}}</div>
@@ -57,15 +121,46 @@
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem simpleCart_shelfItem {{:class}}">
-        <div class="itemName {{if (spicy)}}spicy{{/if}} item_name">{{>name}}</div>
-        <div class="menuPrice"><div class="addButton"
+    <div class="menuItem simpleCart_shelfItem {{:class}}"
+    {{if preview}}
+        data-preview = "{{:preview}}"
+    {{/if}}
+    >
+        {{if thumbnail}}
+            <div class="itemThumb" style="background-image: url('{{:thumbnail}}');"></div>
+        {{/if}}
+        <div class="itemName">{{>name}}</div>
+        {{!-- Menu options --}}
+
+        <div class="addButton"
             data-name = "{{:name}}"
             data-price = "{{:price}}"
             data-description = "{{>description}}"
-        >${{>price}}</div></div>
+        >${{>price}}</div>
         <div class="menuDescription">{{>description}}</div>
-        
+        <div class="menuOptions">
+    </div>
+    </div>
+</script>
+
+<!-- Feed it all the menuoptions and the current item -->
+<script id="menuOptions" type="text/xjsrender">
+        {{for menuOptions }}
+            {{if optionName === }}
+        {{/for}}
+ 
+</script>
+
+<script id="details" type="text/xjsrender">
+    <div class="closeDetails">X</div>
+    <div class="map">
+        <iframe
+          width="100%"
+          height="100%"
+          frameborder="0" style="border:0"
+          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBZvBYARuoBDvxnDdIZ4_R991vn0wgYIx4
+            &q={{>address}}">
+        </iframe>
     </div>
 </script>
 <!-- END TEMPLATES -->
