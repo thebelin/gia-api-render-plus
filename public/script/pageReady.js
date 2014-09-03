@@ -18,19 +18,23 @@ $(document).ready(function () {
       $('.drawerContents').html(modalContents).show();
 
       // Fade the page
-      $('#contentOverlay').show().animate({opacity:1}, 500);
+      $('#contentOverlay').show().velocity({opacity:1}, 500);
 
       // Slide the drawer
-      $('.drawer').animate({height: window.innerHeight * 0.99}, 500, function(){
-        // show the exit button and make it function
-        $('.exitDrawer').off().on(btnEvent, function() {
-          $('.exitDrawer').hide(300);
-          $('#contentOverlay').animate({opacity:0}, 300).hide();
-          $('.drawer').animate({height: '4em'}, 300);
-          if (onClose && typeof onClose === 'function') {
-            onClose.call(this);
-          }
-        }).show(500);
+      $('.drawer').velocity({height: window.innerHeight * 0.99}, {
+        duration: 500,
+        easing:   'slideUpIn',
+        complete: function() {
+          // show the exit button and make it function
+          $('.exitDrawer').off().on(btnEvent, function() {
+            $('.exitDrawer').hide(300);
+            $('#contentOverlay').velocity({opacity:0}, 300).hide();
+            $('.drawer').velocity({height: '4em'}, 300);
+            if (onClose && typeof onClose === 'function') {
+              onClose.call(this);
+            }
+          }).show(500);
+        }
       });
     },
 
@@ -143,12 +147,12 @@ $(document).ready(function () {
         hidePreview = function (callback) {
           $('#previewOverlay').finish();
           $('#preview').stop(true);
-          $('#previewOverlay').animate({opacity: 1}, 200, function () {
+          $('#previewOverlay').velocity({opacity: 1}, 200, function () {
             // change the preview to no image
             $('#preview').css({opacity: 0, background: ''});
             
             // reveal the background
-            $('#previewOverlay').animate({opacity: 0}, 200, function(){
+            $('#previewOverlay').velocity({opacity: 0}, 200, function(){
               if (typeof callback === 'function') {
                 callback.call();
               }
@@ -176,12 +180,12 @@ $(document).ready(function () {
             }, previewTimeout);
             
             // cover the existing preview by making the mask opacity 1
-            $('#previewOverlay').animate({opacity: 1}, 200, function () {
+            $('#previewOverlay').velocity({opacity: 1}, 200, function () {
               // change the preview to the new image source from the data element
               $('#preview').css({opacity: 1, 'background-image': 'url("' + previewImg + '")'});
               
               // display the preview
-              $('#previewOverlay').animate({opacity: 0}, 200, function(){
+              $('#previewOverlay').velocity({opacity: 0}, 200, function(){
                 if (typeof callback === 'function') {
                   callback.call();
                 }
