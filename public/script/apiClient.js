@@ -42,7 +42,7 @@ var apiClient = function(options) {
   // @type String The DOM element which will hold the render output
     containerDiv = options.containerDiv || '#content',
 
-  // @type String The primary render template target div id
+  // @type String The primary render TEMPLATE target div id
     renderTarget = options.renderTarget || '#primary',
 
   // @type String The url to hit for API access (include first querystring to force compatibility)

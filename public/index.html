@@ -9,10 +9,11 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="stylesheet" type="text/css" href="./style/style.css">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
     <script src="./script/jquery.min.js"></script>
     <script src="./script/jquery.jsrender.js"></script>
     <script src="./script/simpleCart.min.js"></script>
+    <script src="./script/velocity.min.js"></script>
     <script src="./script/apiClient.js"></script>
     <script src="./script/pageReady.js"></script>
 </head>
@@ -76,9 +77,26 @@
 
 <script id="cartTemplate" type="text/xjsrender">
     <div id="cart">
-       <div class="simpleCart_items"></div>
-        <span>Total: </span>
-        <div class="simpleCart_grandTotal"></div>
+        <div class="simpleCart_items"></div>
+        <div class="checkout">
+            <div class="simpleCart_grandTotal"></div>
+            {{if paypal}}
+            <div class="paymentOption payPal" data-type="PayPal" data-email="{{:paypal}}"></div>
+            {{/if}}
+            {{if googleWallet}}
+            <div class="paymentOption googleWallet" data-type="GoogleCheckout" data-merchantid="{{:googleWallet}}" data-method="post"><i class="fa fa-google-wallet"></i></div>
+            {{/if}}
+            {{if amazonPayments}}
+            <div class="paymentOption amazonPayments"
+                data-type="AmazonPayments"
+                data-merchant_id="{{:amazonPayments}}"
+                data-merchant_signature="{{:amazonSignature}}"
+                data-aws_access_key_id="{{:amazonKey}}"
+                data-method="GET"></div>
+            {{/if}}
+
+
+        </div>
     </div>
 </script>
 
