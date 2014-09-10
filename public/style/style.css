@@ -37,7 +37,36 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     text-shadow: 1px 1px #000;
     color: #fff;
 }
-
+.paymentOptions {
+    float: left;
+}
+.paymentOption {
+    cursor: pointer;
+    height: 2em;
+    width: 2em;
+    background-size: auto 2em;
+    background-position: center;
+    float: right;
+    margin-right:1em;
+    background-color:#fff;
+    text-align: center;
+    padding-top: .3em;
+    color: #000;
+}
+.paymentOption i {
+    font-size:1.4em;
+}
+/* Payment types */
+.payPal {
+    background-image: url('https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_37x23.jpg');
+}
+.googleWallet {
+    color:#c0c0c0;
+}
+.amazonPayments {
+    background-position: left;
+    background-image: url('https://payments-sandbox.amazon.com/gp/cba/button?color=orange&size=medium&background=dark');
+}
 /* Round Edges */
 #previewMask, #preview, .details, #cart, .drawer .drawerContents {
     -webkit-border-radius: .5em;
@@ -46,7 +75,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 /* Round Things */
-.mapLink, .details .closeDetails, .drawer .exitDrawer, .itemThumb, .addButton, .socialLinks>div, .simpleCart_items .itemRow .item-decrement a, .simpleCart_items .itemRow .item-increment a {
+.paymentOption, .mapLink, .details .closeDetails, .drawer .exitDrawer, .itemThumb, .addButton, .socialLinks>div, .simpleCart_items .itemRow .item-decrement a, .simpleCart_items .itemRow .item-increment a {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -61,7 +90,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 /* Wide Shadow */
-.mapLink, .socialLinks>div, .details, #cart, .menuItem {
+.paymentOption, .mapLink, .socialLinks>div, .details, #cart, .menuItem {
     -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    0px 0px 10px 0px rgba(50, 50, 50, 0.75);
     box-shadow:         0px 0px 10px 0px rgba(50, 50, 50, 0.75);
@@ -117,6 +146,12 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     float: right;
     margin-right: 2em;
 }
+
+.cartLabel {
+    float: left;
+}
+.totalLabel { width: 80%;}
+
 .simpleCart_items .headerRow, .simpleCart_items .itemRow .simpleCart_remove {
     display: none;
 }

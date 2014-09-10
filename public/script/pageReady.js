@@ -1,7 +1,6 @@
 /**
  * Ready state for document to load api and other jQuery components
  */
-var cart;
 $(document).ready(function () {
   var
     // This tracks if the user is on a mobile browser
@@ -39,6 +38,29 @@ $(document).ready(function () {
     },
 
     /**
+     * Support the selection of a type of payment according to what
+     * payment button is clicked
+     *
+     * @param String buttonDom A reference to the button clicked upon
+     * 
+     * @return void
+     */
+    selectPayment = function (buttonDom) {
+      // Different payment mechanisms mean setting different attributes
+      // use the ones directly provided by the data attribute of the button
+      var cartOptions = {
+        checkout: $.extend(
+          {},
+          $(buttonDom).data(),
+          {merchantID: $(buttonDom).data('merchantid')}
+        )
+      };
+      console.log(cartOptions);
+      simpleCart(cartOptions);
+      simpleCart.checkout();
+    },
+
+    /**
      * Render a social interaction page
      * 
      * @param String system The identifier for the social site
@@ -55,159 +77,6 @@ $(document).ready(function () {
       }
 
     },
-
-    // Start the shoppingCart with all the options set
-    cart = simpleCart({
-      debug: true,
-      checkout: {
-        type: "Google" ,
-        email: "thebelin@thebelin.com"
-      },
-      // array representing the format and columns of the cart, see 
-      // the cart columns documentation
-      cartColumns: [
-        { attr: "quantity",  label: "Qty" },
-        { attr: "name",      label: "Name" },
-        { view: "decrement", label: false },
-        { attr: "total",     label: "SubTotal", view: 'currency' },
-        { view: "increment", label: false }
-      ],
-
-      // event callbacks 
-      beforeAdd               : null,
-      afterAdd                : null,
-      load                    : null,
-      beforeSave              : null,
-      afterSave               : null,
-      update                  : null,
-      ready                   : null,
-
-      // Checkout events
-      checkoutSuccess         : null,
-      checkoutFail            : null,
-      beforeCheckout          : null
-    }),
-
-  // Start the apiClient with all the options set that need to be configured
-    pageClient = apiClient({
-      pollInterval: 10000,
-      localDataDom: 'ImaginaryEats',
-      memoField:    'menuHash',
-      mode:         'live',
-      apiUrl:       'https://script.google.com/macros/s/AKfycbyvb-2gd5IDPf42P2CIS1f8EVesZfPTMZJNCsLyAvDnEnbYdJhb/exec',
-      devUrl:       'https://script.google.com/macros/s/AKfycbwqjwmqASwN0-g0p7dLx_fsqHVc2mpO-e3M00BY8oBB/dev',
-
-      // Callback function for apiClient button init which executes after render
-      initButtons: function() {
-        // Init the social buttons
-        $('.socialButton').off().on(btnEvent, function () {
-          $('.socialButton').removeClass('socialSelected');
-          $(this).addClass('socialSelected');
-          showModal(getSocial($(this).data('system')), function() {
-            $('.socialButton').removeClass('socialSelected');
-          });
-        });
-
-        // Init the close details button
-        $('.closeDetails').off().on(btnEvent, function () {
-          $('.details').hide(300);
-          $('.mapLink').show(500);
-          $('.mapLink').off().on(btnEvent, function () {
-            $('.details').show(300);
-            $('.mapLink').hide();
-          });
-        });
-
-        if (simpleCart && typeof simpleCart.add === 'function') {
-          // Attach the add button event to adding the item to the cart
-          $('.addButton').off().on(btnEvent, function() {
-            simpleCart.add($.extend({}, $(this).data(), {quantity: 1}));
-          });
-
-          // attach the add button click to the thumbnail
-          $('.itemThumb').off().on(btnEvent, function() {
-            console.log($(this).parent());
-            $(this).parent().parent().children('.addButton').trigger(btnEvent);
-          });
-        } else {
-          // There was no cart to attach to
-          console.log('no cart', simpleCart);
-        }
-      },
-
-      // Callback function for apiClient events which executes after render
-      onRender: function() {
-        // A holder for the timer's reference
-        var previewTimer = null,
-
-        // Number the number of ms the preview should be active
-        previewTimeout = 5000,
-
-        // A function to hide the preview
-        hidePreview = function (callback) {
-          $('#previewOverlay').finish();
-          $('#preview').stop(true);
-          $('#previewOverlay').velocity({opacity: 1}, 200, function () {
-            // change the preview to no image
-            $('#preview').css({opacity: 0, background: ''});
-            
-            // reveal the background
-            $('#previewOverlay').velocity({opacity: 0}, 200, function(){
-              if (typeof callback === 'function') {
-                callback.call();
-              }
-            });
-          });
-        },
-
-        /**
-         * And one to do the preview
-         * @param String previewImg the url for the preview image
-         * 
-         * @return void
-         */
-        doPreview = function (previewImg, callback) {
-          if ($('#preview').css('background').indexOf(previewImg) === -1) {
-            // clear the timeout and set it again
-            if (previewTimer) {
-              // finish all existing animation sequences
-              $('#previewOverlay').finish().css({opacity:1});
-              clearTimeout(previewTimer);
-            }
-            previewTimer = setTimeout( function () {
-              previewTimer = null;
-              hidePreview();
-            }, previewTimeout);
-            
-            // cover the existing preview by making the mask opacity 1
-            $('#previewOverlay').velocity({opacity: 1}, 200, function () {
-              // change the preview to the new image source from the data element
-              $('#preview').css({opacity: 1, 'background-image': 'url("' + previewImg + '")'});
-              
-              // display the preview
-              $('#previewOverlay').velocity({opacity: 0}, 200, function(){
-                if (typeof callback === 'function') {
-                  callback.call();
-                }
-              });
-            });
-          } else {
-            // console.log($('#preview').css('background-image').indexOf(previewImg),$('#preview').css('background-image'), previewImg);
-          }
-        };
-
-        // Attach a preview to the items with preview image data
-        $('.menuItem[data-preview]').off().on('mouseover', function () {
-          doPreview($(this).data('preview'));
-        }).on(btnEvent, function () {
-          // Also attach to the interaction event
-          doPreview($(this).data('preview'));
-        });
-
-        // Do the resizer when the render runs
-        resizer();
-      }
-    }),
 
     // This is a function for making the app design responsive
     resizer = function() {
@@ -233,5 +102,170 @@ $(document).ready(function () {
   window.onresize = function () {
     resizer();
   }
+
+  /**
+   * Start the apiClient with all the options set that need to be configured
+   * Create a GIA instance 
+   * this is a data source interpreter
+   */
+  apiClient({
+    pollInterval: 10000,
+    localDataDom: 'ImaginaryEats',
+    memoField:    'menuHash',
+    mode:         'live',
+    apiUrl:       'https://script.google.com/macros/s/AKfycbyvb-2gd5IDPf42P2CIS1f8EVesZfPTMZJNCsLyAvDnEnbYdJhb/exec',
+    devUrl:       'https://script.google.com/macros/s/AKfycbwqjwmqASwN0-g0p7dLx_fsqHVc2mpO-e3M00BY8oBB/dev',
+
+    // Callback function for apiClient button init which executes after render
+    initButtons: function() {
+      // Init the social buttons
+      $('.socialButton').off().on(btnEvent, function () {
+        $('.socialButton').removeClass('socialSelected');
+        $(this).addClass('socialSelected');
+        showModal(getSocial($(this).data('system')), function() {
+          $('.socialButton').removeClass('socialSelected');
+        });
+      });
+
+      // Init the close details button
+      $('.closeDetails').off().on(btnEvent, function () {
+        $('.details').hide(300);
+        $('.mapLink').show(500);
+        $('.mapLink').off().on(btnEvent, function () {
+          $('.details').show(300);
+          $('.mapLink').hide();
+        });
+      });
+
+      if (simpleCart && typeof simpleCart.add === 'function') {
+        // Attach the add button event to adding the item to the cart
+        $('.addButton').off().on(btnEvent, function () {
+          simpleCart.add($.extend({}, $(this).data(), {quantity: 1}));
+        });
+
+        // attach the add button click to the thumbnail
+        $('.itemThumb').off().on(btnEvent, function () {
+          console.log($(this).parent());
+          $(this).parent().parent().children('.addButton').trigger(btnEvent);
+        });
+      } else {
+        // There was no cart to attach to
+        console.log('no cart', simpleCart);
+      }
+
+      // Init the payment options buttons
+      $('.paymentOption').off().on(btnEvent, function () {
+        selectPayment(this);
+        simpleCart.checkout();
+      });
+    },
+
+    // Callback function for apiClient events which executes after render
+    onRender: function() {
+      // A holder for the timer's reference
+      var previewTimer = null,
+
+      // Number the number of ms the preview should be active
+      previewTimeout = 5000,
+
+      // A function to hide the preview
+      hidePreview = function (callback) {
+        $('#previewOverlay').finish();
+        $('#preview').stop(true);
+        $('#previewOverlay').velocity({opacity: 1}, 200, function () {
+          // change the preview to no image
+          $('#preview').css({opacity: 0, background: ''});
+          
+          // reveal the background
+          $('#previewOverlay').velocity({opacity: 0}, 200, function(){
+            if (typeof callback === 'function') {
+              callback.call();
+            }
+          });
+        });
+      },
+
+      /**
+       * And one to do the preview
+       * @param String previewImg the url for the preview image
+       * 
+       * @return void
+       */
+      doPreview = function (previewImg, callback) {
+        if ($('#preview').css('background').indexOf(previewImg) === -1) {
+          // clear the timeout and set it again
+          if (previewTimer) {
+            // finish all existing animation sequences
+            $('#previewOverlay').finish().css({opacity:1});
+            clearTimeout(previewTimer);
+          }
+          previewTimer = setTimeout( function () {
+            previewTimer = null;
+            hidePreview();
+          }, previewTimeout);
+          
+          // cover the existing preview by making the mask opacity 1
+          $('#previewOverlay').velocity({opacity: 1}, 200, function () {
+            // change the preview to the new image source from the data element
+            $('#preview').css({opacity: 1, 'background-image': 'url("' + previewImg + '")'});
+            
+            // display the preview
+            $('#previewOverlay').velocity({opacity: 0}, 200, function(){
+              if (typeof callback === 'function') {
+                callback.call();
+              }
+            });
+          });
+        } else {
+          // console.log($('#preview').css('background-image').indexOf(previewImg),$('#preview').css('background-image'), previewImg);
+        }
+      };
+
+      // Attach a preview to the items with preview image data
+      $('.menuItem[data-preview]').off().on('mouseover', function () {
+        doPreview($(this).data('preview'));
+      }).on(btnEvent, function () {
+        // Also attach to the interaction event
+        doPreview($(this).data('preview'));
+      });
+
+      // Do the resizer when the render runs
+      resizer();
+    }
+  });
+
+  // Start the shoppingCart with all the options set
+  simpleCart({
+    debug: true,
+    checkout: {
+      type: "Google" ,
+      email: "thebelin@thebelin.com"
+    },
+    // array representing the format and columns of the cart, see 
+    // the cart columns documentation
+    cartColumns: [
+      { attr: "quantity",  label: "Qty" },
+      { attr: "name",      label: "Name" },
+      { view: "decrement", label: false },
+      { attr: "total",     label: "SubTotal", view: 'currency' },
+      { view: "increment", label: false }
+    ],
+
+    // event callbacks 
+    beforeAdd               : null,
+    afterAdd                : null,
+    load                    : null,
+    beforeSave              : null,
+    afterSave               : null,
+    update                  : null,
+    ready                   : null,
+
+    // Checkout events
+    checkoutSuccess         : null,
+    checkoutFail            : null,
+    beforeCheckout          : null
+  });
+
+  // Firt time through, run the resizer
   resizer();
 });
