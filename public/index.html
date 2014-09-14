@@ -57,6 +57,8 @@
     </div>
         <div class="cartItems">
         {{for categories tmpl='#category' /}}
+        <div class="cartFormat" data-view="grid" title="Switch To Grid View"><i class="fa fa-th"></i></div>
+        <div class="cartFormat" data-view="list" title="Switch To List View"><i class="fa fa-list"></i></div>
     </div>
     <div class="details">
         {{for config     tmpl='#details' /}}
@@ -139,7 +141,7 @@
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem simpleCart_shelfItem {{:class}}"
+    <div class="menuItem menuItemList simpleCart_shelfItem {{:class}}"
     {{if preview}}
         data-preview = "{{:preview}}"
     {{/if}}

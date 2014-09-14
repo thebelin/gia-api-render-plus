@@ -1,5 +1,7 @@
 /**
  * Ready state for document to load api and other jQuery components
+ * 
+ * note that animations in this page require velocity.js library
  */
 $(document).ready(function () {
   var
@@ -9,20 +11,28 @@ $(document).ready(function () {
     // The event to track to determine click state
     btnEvent = isMobile ? 'touchstart' : 'click',
 
+    // The current display mode (list or grid)
+    displayMode = 'list',
+
     // Use whatever function to display a modal
     showModal = function (modalContents, onClose) {
       // In this case, we're using a sliding drawer
       
       // put the contents in the drawer
-      $('.drawerContents').html(modalContents).show();
+      // If the content is a jQuery selector, append that DOM item to the drawer contents
+      if ($(modalContents).length) {
+        $('.drawerContents').empty().append($(modalContents)).show();
+      } else {
+        $('.drawerContents').html(modalContents).show();
+      }
 
       // Fade the page
       $('#contentOverlay').show().velocity({opacity:1}, 500);
 
       // Slide the drawer
       $('.drawer').velocity({height: window.innerHeight * 0.99}, {
-        duration: 500,
-        easing:   'slideUpIn',
+        duration: 800,
+        easing:   'easeInOutQuint',
         complete: function() {
           // show the exit button and make it function
           $('.exitDrawer').off().on(btnEvent, function() {
@@ -143,11 +153,6 @@ $(document).ready(function () {
           simpleCart.add($.extend({}, $(this).data(), {quantity: 1}));
         });
 
-        // attach the add button click to the thumbnail
-        $('.itemThumb').off().on(btnEvent, function () {
-          console.log($(this).parent());
-          $(this).parent().parent().children('.addButton').trigger(btnEvent);
-        });
       } else {
         // There was no cart to attach to
         console.log('no cart', simpleCart);
@@ -157,6 +162,22 @@ $(document).ready(function () {
       $('.paymentOption').off().on(btnEvent, function () {
         selectPayment(this);
         simpleCart.checkout();
+      });
+
+      // init the list format buttons
+      $('.cartFormat[data-view="list"]').off().on(btnEvent, function () {
+        displayMode = 'list';
+        $('.menuItem').removeClass('menuItemGrid').addClass('menuItemList');
+        $(this).hide(200, function () {
+          $('.cartFormat[data-view="grid"]').show(500);
+        });
+      });
+      $('.cartFormat[data-view="grid"]').off().on(btnEvent, function () {
+        displayMode = 'grid';
+        $('.menuItem').removeClass('menuItemList').addClass('menuItemGrid');
+        $(this).hide(200, function () {
+          $('.cartFormat[data-view="list"]').show(500);
+        });
       });
     },
 
@@ -194,7 +215,7 @@ $(document).ready(function () {
       doPreview = function (previewImg, callback) {
         if ($('#preview').css('background').indexOf(previewImg) === -1) {
           // clear the timeout and set it again
-          if (previewTimer) {
+          if (previewTimeout && previewTimer) {
             // finish all existing animation sequences
             $('#previewOverlay').finish().css({opacity:1});
             clearTimeout(previewTimer);
@@ -222,11 +243,18 @@ $(document).ready(function () {
       };
 
       // Attach a preview to the items with preview image data
-      $('.menuItem[data-preview]').off().on('mouseover', function () {
-        doPreview($(this).data('preview'));
-      }).on(btnEvent, function () {
-        // Also attach to the interaction event
-        doPreview($(this).data('preview'));
+      $('.itemThumb,.itemName').off().on(btnEvent, function () {
+        console.log($(this).parent());
+        // Show the selected item in list view
+        $('.menuItem').removeClass('menuItemList');
+        if (displayMode === 'list') {
+          // Already in list mode
+        } else {
+          $('.menuItem').addClass('menuItemGrid');
+          $(this).parent().removeClass('menuItemGrid').addClass('menuItemList');
+        }
+        
+        doPreview($(this).parent().data('preview'));
       });
 
       // Do the resizer when the render runs
