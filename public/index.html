@@ -9,33 +9,18 @@
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="stylesheet" type="text/css" href="./style/style.css">
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css" rel="stylesheet">
     <script src="./script/jquery.min.js"></script>
     <script src="./script/jquery.jsrender.js"></script>
     <script src="./script/simpleCart.min.js"></script>
+    <script src="./script/velocity.min.js"></script>
     <script src="./script/apiClient.js"></script>
     <script src="./script/pageReady.js"></script>
 </head>
 
 <body>
-    <div class='socialModules'>
-        <div class='facebook socialModule'>
-                <!-- Facebook Root -->
-            <div id="fb-root"></div>
-            <script>(function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=1565910020296909&version=v2.0";
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
-                <!-- End Facebook Root -->
+    <div class='socialModules'></div>
 
-                <!-- Facebook DOM anchor for LIKE -->
-            <div class="fb-like" data-href="http://imaginaryeats.com" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
-                <!-- End Facebook DOM Anchor for LIKE -->
-        </div>
-    </div>
      <!-- The DOM target for API render calls -->
     <div id="content"></div>
     <!-- Finish DOM target for API render calls -->
@@ -56,6 +41,8 @@
     </div>
         <div class="cartItems">
         {{for categories tmpl='#category' /}}
+        <div class="cartFormat" data-view="grid" title="Switch To Grid View"><i class="fa fa-th"></i></div>
+        <div class="cartFormat" data-view="list" title="Switch To List View"><i class="fa fa-list"></i></div>
     </div>
     <div class="details">
         {{for config     tmpl='#details' /}}
@@ -63,7 +50,27 @@
 </script>
 
 <script id="socialFacebook" type="text/xjsrender">
+    <div class='facebook socialModule'>
+            <!-- Facebook Root -->
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&{{:facebookAppId}}&version=v2.0";
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+            <!-- End Facebook Root -->
 
+            <!-- Facebook DOM anchor for LIKE -->
+        <div class="fb-like" data-href="http://imaginaryeats.com" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+            <!-- End Facebook DOM Anchor for LIKE -->
+    </div>
+</script>
+
+<script id="socialTwitter" type="text/xjsrender">
+    <a class="twitter-timeline" href="https://twitter.com/thebelin" {{:twitterWidgetId}}>Tweets by {{:twitter}}</a>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </script>
 
 <script id="breadcrumb" type="text/xjsrender">
@@ -76,9 +83,24 @@
 
 <script id="cartTemplate" type="text/xjsrender">
     <div id="cart">
-       <div class="simpleCart_items"></div>
-        <span>Total: </span>
-        <div class="simpleCart_grandTotal"></div>
+        <div class="simpleCart_items"></div>
+        <div class="checkout">
+            <div class="simpleCart_grandTotal"></div>
+            {{if paypal}}
+            <div class="paymentOption payPal" data-type="PayPal" data-email="{{:paypal}}"></div>
+            {{/if}}
+            {{if googleWallet}}
+            <div class="paymentOption googleWallet" data-type="GoogleCheckout" data-merchantid="{{:googleWallet}}" data-method="post"><i class="fa fa-google-wallet"></i></div>
+            {{/if}}
+            {{if amazonPayments}}
+            <div class="paymentOption amazonPayments"
+                data-type="AmazonPayments"
+                data-merchant_id="{{:amazonPayments}}"
+                data-merchant_signature="{{:amazonSignature}}"
+                data-aws_access_key_id="{{:amazonKey}}"
+                data-method="GET"></div>
+            {{/if}}
+        </div>
     </div>
 </script>
 
@@ -121,10 +143,14 @@
 </script>
 
 <script id="menuItem" type="text/xjsrender">
-    <div class="menuItem simpleCart_shelfItem {{:class}}"
+    <div class="menuItem menuItemList simpleCart_shelfItem {{:class}}"
     {{if preview}}
         data-preview = "{{:preview}}"
     {{/if}}
+    data-limit = "{{:available}}"
+    data-name  = "{{:name}}"
+    data-price = "{{:price}}"
+    {{for menuOptions tmpl='#defaultOption' /}}
     >
         {{if thumbnail}}
             <div class="itemThumb" style="background-image: url('{{:thumbnail}}');"></div>
@@ -133,22 +159,45 @@
         {{!-- Menu options --}}
 
         <div class="addButton"
-            data-name = "{{:name}}"
-            data-price = "{{:price}}"
-            data-description = "{{>description}}"
+            data-name  = "{{:name}}"
+            data-price = "{{:price}}" 
+            {{for menuOptions tmpl='#defaultOption' /}}
         >${{>price}}</div>
         <div class="menuDescription">{{>description}}</div>
         <div class="menuOptions">
-    </div>
+            {{for menuOptions tmpl='#menuOption' /}}
+        </div>
     </div>
 </script>
 
-<!-- Feed it all the menuoptions and the current item -->
-<script id="menuOptions" type="text/xjsrender">
-        {{for menuOptions }}
-            {{if optionName === }}
-        {{/for}}
- 
+<!-- Feed it all the menuoptions for the current item -->
+<script id="menuOption" type="text/xjsrender">
+    <div class="selectOption" data-option="{{>optionName}}">
+        {{if option1}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option1}}" >{{:option1}}</div>{{/if}}
+        {{if option2}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option2}}" >{{:option2}}</div>{{/if}}
+        {{if option3}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option3}}" >{{:option3}}</div>{{/if}}
+        {{if option4}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option4}}" >{{:option4}}</div>{{/if}}
+        {{if option5}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option5}}" >{{:option5}}</div>{{/if}}
+        {{if option6}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option6}}" >{{:option6}}</div>{{/if}}
+        {{if option7}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option7}}" >{{:option7}}</div>{{/if}}
+        {{if option8}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option8}}" >{{:option8}}</div>{{/if}}
+        {{if option9}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option9}}" >{{:option9}}</div>{{/if}}
+        {{if option10}}<div class="optionValue" data-option="{{>optionName}}" data-value="{{:option10}}" >{{:option10}}</div>{{/if}}
+    </div>
+</script>
+
+<!-- Feed it all the menuoptions for the current item and get the default option -->
+<script id="defaultOption" type="text/xjsrender">
+    {{if option1}}data-{{:optionName}}="{{:option1}}"{{/if}}
+    {{if option2}}data-{{:optionName}}="{{:option2}}"{{/if}}
+    {{if option3}}data-{{:optionName}}="{{:option3}}"{{/if}}
+    {{if option4}}data-{{:optionName}}="{{:option4}}"{{/if}}
+    {{if option5}}data-{{:optionName}}="{{:option5}}"{{/if}}
+    {{if option6}}data-{{:optionName}}="{{:option6}}"{{/if}}
+    {{if option7}}data-{{:optionName}}="{{:option7}}"{{/if}}
+    {{if option8}}data-{{:optionName}}="{{:option8}}"{{/if}}
+    {{if option9}}data-{{:optionName}}="{{:option9}}"{{/if}}
+    {{if option10}}data-{{:optionName}}="{{:option10}}"{{/if}}
 </script>
 
 <script id="details" type="text/xjsrender">

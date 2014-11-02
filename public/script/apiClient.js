@@ -12,6 +12,7 @@ var apiClient = function(options) {
   if (!this instanceof apiClient) {
     return new apiClient(options);
   }
+  console.log('apCLient options:', options);
   // @type Object self reference for external callback
   var self = this,
 
@@ -42,7 +43,7 @@ var apiClient = function(options) {
   // @type String The DOM element which will hold the render output
     containerDiv = options.containerDiv || '#content',
 
-  // @type String The primary render template target div id
+  // @type String The primary render TEMPLATE target div id
     renderTarget = options.renderTarget || '#primary',
 
   // @type String The url to hit for API access (include first querystring to force compatibility)
@@ -84,6 +85,10 @@ var apiClient = function(options) {
       debug && console.log(debug + 'Render data', data);
 
       $(containerDiv).html($.templates(renderTarget).render(data));
+
+      if (typeof onRender === 'function') {
+        onRender.call(this, data);
+      }
 
       // Pass the data on to the init buttons routine also
       initButtons(data);
@@ -162,10 +167,20 @@ var apiClient = function(options) {
 
   // A default init function to run
     init = function (params) {
-      // If there's data stored in the localstorage, render it to the page
-      localDataDom && localStorage && render(safeParse(localStorage.getItem(localDataDom + '_data')));
+      // if the browser supports localStorage
+      if (localDataDom && localStorage) {
+        var cachedData = safeParse(localStorage.getItem(localDataDom + '_data'));
+        
+        // If the memo exists in the cachedData, set it to the local memo
+        if (cachedData && cachedData[memoField] !== 'undefined') {
+          memo = cachedData[memoField];
+        }
 
-      // And get the new data
+        // Then render the data to the page
+        render(cachedData);
+      }
+
+      // And start the poll to get new data
       poll(params);
     };
 
