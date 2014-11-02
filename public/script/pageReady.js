@@ -5,6 +5,9 @@
  */
 $(document).ready(function () {
   var
+    // This can be set to false to disable debugging
+    debug = '#pageReady -- ',
+
     // This tracks if the user is on a mobile browser
     isMobile = (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())),
 
@@ -65,7 +68,7 @@ $(document).ready(function () {
           {merchantID: $(buttonDom).data('merchantid')}
         )
       };
-      console.log(cartOptions);
+      debug && console.log(debug + 'doing payment system: cartOptions', cartOptions);
       simpleCart(cartOptions);
       simpleCart.checkout();
     },
@@ -76,23 +79,25 @@ $(document).ready(function () {
      * @param String system The identifier for the social site
      * 
      * @return void
+     *
+     * @todo This method needs additional handlers for other social tabs
+     * @todo Find a social integration js module and use that for social tabs
      */
     getSocial = function (system) {
-      console.log('render social:', system);
+      debug && console.log(debug + 'render social:', system);
       // Based on the system, do whatever the window calls for
       switch (system) {
         case 'facebook':
           return $(".facebook.socialModule").html()
           break;
       }
-
     },
 
-    // This is a function for making the app design responsive
+    // This is a function for making the app design responsive to the host system
     resizer = function() {
       var zoomTo = 800;
         if (isMobile) {
-          zoomTo = 600;
+          zoomTo = 400;
         }
 
       // format for landscape display
@@ -155,7 +160,7 @@ $(document).ready(function () {
 
       } else {
         // There was no cart to attach to
-        console.log('no cart', simpleCart);
+        debug && console.log(debug + 'no cart', simpleCart);
       }
 
       // Init the payment options buttons
@@ -179,10 +184,75 @@ $(document).ready(function () {
           $('.cartFormat[data-view="list"]').show(500);
         });
       });
+
+      /**
+       * Init for item option selection
+       * This is a generic way to keep track of item options, attaching them to the add button
+       * on the interface as data elements.  When any item is added to the basket, the data values
+       * attached to the add button are passed to the item specification.
+       */
+      // Mobile select handler
+      $('.selectOption').off().on('touchstart', function () {
+        $(this).toggleClass('selectOptionOpen');
+      });
+      // Desktop select handler
+      $('.selectOption').hover(
+        function () {
+          $(this).toggleClass('selectOptionOpen');
+        }
+      );
+
+      $('.optionValue').off().on(btnEvent, function () {
+        // Only proceed if the options list is open to being selected from
+        if (!$(this).parent().hasClass('selectOptionOpen')) {
+          console.log('select Not open');
+          return;
+        }
+        // note that "this" now refers to the element which was interacted with
+        // The current option name
+        var thisOption = $(this).data('option'),
+          optionText = '',
+        // Build the optionObject data object
+          optionObject = $(this).parent().parent().parent().data();
+          
+        // Set the optionObject data key for this option to the value selected
+        optionObject[thisOption] = $(this).data('value');
+
+        debug && console.log('optionObject', $(this).parent().parent().parent(), JSON.stringify(optionObject));
+        
+
+        // Set the name key of the add Button data to include the selected options
+        // If the item is added to the cart, it will have this name in the cart
+        for (var dataKey in optionObject) {
+          if (!(dataKey in {name:1,limit:1,description:1,price:1,quantity:1,preview:1,options:1})) {
+            debug && console.log(dataKey);
+            optionText += ' ' + optionObject[dataKey];
+          }
+        }
+        optionObject['options'] = optionText;
+
+        // Remove the selection class from ALL elements
+        $(this).parent().data('value', thisOption)
+          .children().removeClass('selectedOption');
+
+        // Add selection class to selected element
+        $(this).addClass('selectedOption');
+
+        // Cause the parent to scroll to the top of the list so the selected item is shown
+        // Scroll functions don't return the parent reference, so break the jQuery chain
+        $(this).parent().scrollTop(0);
+
+        // Move the selected item to the top of this list
+        $(this).parent().prepend($(this));
+
+        // Set the option data value for this option on the parent element's add button
+        $(this).parent().parent().parent().children('.addButton').data(optionObject);
+      });
     },
 
     // Callback function for apiClient events which executes after render
-    onRender: function() {
+    onRender: function(data) {
+      debug && console.log(debug + 'onRender', data);
       // A holder for the timer's reference
       var previewTimer = null,
 
@@ -191,8 +261,7 @@ $(document).ready(function () {
 
       // A function to hide the preview
       hidePreview = function (callback) {
-        $('#previewOverlay').finish();
-        $('#preview').stop(true);
+        $('#previewOverlay, #preview').finish();
         $('#previewOverlay').velocity({opacity: 1}, 200, function () {
           // change the preview to no image
           $('#preview').css({opacity: 0, background: ''});
@@ -207,10 +276,12 @@ $(document).ready(function () {
       },
 
       /**
-       * And one to do the preview
-       * @param String previewImg the url for the preview image
+       * The preview fades in an Overlay,
+       * then replaces the image in the preview area
+       * then fades out the overlay
        * 
-       * @return void
+       * @param String   previewImg The url for the preview image
+       * @param Function callback   A function to call when the preview completes
        */
       doPreview = function (previewImg, callback) {
         if ($('#preview').css('background').indexOf(previewImg) === -1) {
@@ -237,23 +308,22 @@ $(document).ready(function () {
               }
             });
           });
-        } else {
-          // console.log($('#preview').css('background-image').indexOf(previewImg),$('#preview').css('background-image'), previewImg);
         }
       };
 
       // Attach a preview to the items with preview image data
       $('.itemThumb,.itemName').off().on(btnEvent, function () {
-        console.log($(this).parent());
         // Show the selected item in list view
         $('.menuItem').removeClass('menuItemList');
         if (displayMode === 'list') {
           // Already in list mode
         } else {
+          // Re-apply grid mode to the previously listed item
           $('.menuItem').addClass('menuItemGrid');
+          // Open the selected item back into list mode
           $(this).parent().removeClass('menuItemGrid').addClass('menuItemList');
         }
-        
+        // This shows the main image in the background
         doPreview($(this).parent().data('preview'));
       });
 
@@ -274,6 +344,7 @@ $(document).ready(function () {
     cartColumns: [
       { attr: "quantity",  label: "Qty" },
       { attr: "name",      label: "Name" },
+      { attr: "options",   label: "Options" },
       { view: "decrement", label: false },
       { attr: "total",     label: "SubTotal", view: 'currency' },
       { view: "increment", label: false }

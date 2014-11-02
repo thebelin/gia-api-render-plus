@@ -9,7 +9,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 #footer {height:2em;position:absolute;bottom:.1em;}
 
 /* Round Edges */
-#previewMask, #preview, .details, #cart, .drawer .drawerContents, .menuItem {
+#previewMask, #preview, .details, #cart, .drawer .drawerContents, .menuItem, .selectOption, .optionValue {
     -webkit-border-radius: .5em;
     -moz-border-radius: .5em;
     border-radius: .5em;
@@ -23,7 +23,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 /* Shaded Things */
-.details, #cart, .menuItem {
+.details, #cart, .menuItem, .optionValue {
     background: -webkit-linear-gradient(bottom,rgba(0,0,0,.3),rgba(0,0,0,.7)); /*Safari 5.1-6*/
     background: -o-linear-gradient(bottom,rgba(0,0,0,.3),rgba(0,0,0,.7)); /*Opera 11.1-12*/
     background: -moz-linear-gradient(bottom,rgba(0,0,0,.3),rgba(0,0,0,.7)); /*Fx 3.6-15*/
@@ -31,7 +31,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 /* Wide Shadow */
-.paymentOption, .mapLink, .socialLinks>div, .details, #cart, .menuItem {
+.paymentOption, .mapLink, .socialLinks>div, .details, #cart, .menuItem, .optionValue{
     -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    0px 0px 10px 0px rgba(50, 50, 50, 0.75);
     box-shadow:         0px 0px 10px 0px rgba(50, 50, 50, 0.75);
@@ -60,12 +60,20 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 /* Animated css items */
-.menuItemList, .menuItemGrid{
+.menuItemList, .menuItemGrid {
     -webkit-transition: all 0.6s ease;
     -moz-transition: all 0.6s ease;
     -o-transition: all 0.6s ease;
     transition: all 0.6s ease;
 }
+
+.selectOption, .selectedOption {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
 .cartFormat{
     position: absolute;
     left:.25em;
@@ -232,7 +240,7 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     padding: .25em;
     margin-right: .25em;
     margin-bottom: .25em;
-    max-height: 8em;
+    min-height: 12em;
     overflow-y: hidden;
 }
 
@@ -255,7 +263,8 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
 }
 
 .menuDescription {
-    margin-left:6em;
+    margin-left: 6em;
+    height: 8em;
 }
 
 .menuItemGrid .menuDescription {
@@ -293,6 +302,40 @@ body {font-family:Verdana,Lucida;background-image:url('../images/food_background
     background-color:#fff;
     box-shadow: -1px -1px #000;
 }
+
+/* menu Options */
+.selectOption {
+    opacity: .95;
+    float: left;
+    width: 8em;
+    height: 1.5em;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    padding: 0em .5em 0 .5em;
+    margin: .2em .5em 0 .5em;
+}
+.selectOptionOpen {
+    height: 8em;
+    margin-top: -6.5em;
+    overflow-y: auto;
+}
+
+.optionValue {
+    background-color: #9CB49C;
+    padding: 0 .5em 0 .5em;
+    text-align: center;
+    margin: .2em 0 0 0;
+}
+.optionValue:hover, .selectedOption {
+    background-color: #163011;
+    color: #fff;
+    cursor: pointer;
+}
+.optionHead {
+    font-weight: bold;
+    position: static;
+}
+/* End menu options */
 
 #previewMask, #previewOverlay, #preview {
     margin-top:2em;
