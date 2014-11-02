@@ -3,7 +3,8 @@ $(document).ready(function() {
 	var resizer = function() {
 		var zoomTo = 800;
 	    if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(navigator.userAgent.toLowerCase())) {
-	    	zoomTo = 600;
+	    	// Double size of objects on mobile
+	    	zoomTo = 400;
 	    }
 
 		// format for landscape display
@@ -14,6 +15,8 @@ $(document).ready(function() {
 		}
 		$('body').css(fontObj);
 	};
-	window.onresize= function(){resizer();};
+	// Attach the window resize event to the resizer process
+	window.onresize = function(){resizer();};
+	// Run the resizer
 	resizer();
 });
